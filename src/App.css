@@ -1,0 +1,49 @@
+.AuthPage{
+ border: 1px solid black;
+ width: 50vw;
+ height: 50vh;
+ border-radius: 15px;
+ background-color: aliceblue;
+ padding: 10px;
+ display: flex;
+ flex-direction: column;
+ gap:15px;
+}
+
+.authSubPage{
+ 
+
+}
+.AuthPage>div{
+  display: flex;
+  flex-direction: column;
+  gap:15px;
+  width: 100%;
+  
+}
+form{
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+  width: 100%;
+}
+input{
+  height: 35px;
+  border: 1px solid gray;
+  border-radius: 8px;
+  text-align:start;
+  width: 100%;
+}
+.authPageBtn{
+  border-radius: 20px;
+  height: 30px;
+  width: 100%;
+  text-align: center;
+}
+.authPageMainBtn{
+  width: 100%;
+  border-radius: 10px;
+  text-align: center;
+  padding: 10px;
+  background-color: aquamarine;
+}
