@@ -1,4 +1,5 @@
 import React, {useState } from "react";
+import { Link } from "react-router-dom";
 
 const signupApi = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
 export default function SignUpForm() {
@@ -81,18 +82,18 @@ export default function SignUpForm() {
                     onChange={handleFormData}
                     required
                 ></input>
-                {err ? <p style={{color:"red"}}>{err}</p>:""}
             </form>
+                {err ? <p style={{color:"red"}}>{err}</p>:""}
         </div>
-        <button className="authPageBtn" onClick={() => {
+       <Link to="/welcome-page"> <button className="authPageBtn" onClick={() => {
             if (formData.password === formData.confirmPassword) {
-                // setFormData(prev =>({...prev,errMsg:""}))
+                setFormData("")
                 authNewUSer()
             } else {
                 validatePassword()
             }
         }
-        }>Sign Up</button>
+        }>Sign Up</button></Link>
         
     </div>)
 }

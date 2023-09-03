@@ -1,11 +1,17 @@
 import './App.css';
-import AuthPage from './Auth/AuthPage';
+import React from "react";
+import { BrowserRouter as Router, Route,Routes } from "react-router-dom";
+import Main from './Main';
+import WelcomePage from './Welcome';
 
 function App() {
   return (
-    <div className="App">
-       <AuthPage/>      
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Main/>} />
+        <Route path="/welcome-page" element={<WelcomePage/>} />
+      </Routes>
+    </Router>
   );
 }
 
