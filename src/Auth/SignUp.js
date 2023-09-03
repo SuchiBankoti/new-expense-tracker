@@ -44,17 +44,6 @@ export default function SignUpForm() {
             console.error("Error:", error);
         });
     }
-    
-
-
-
-
-
-
-
-
-
-
 
     function handleFormData(e) {
         setFormData(prev => {
@@ -74,6 +63,7 @@ export default function SignUpForm() {
                     name="email"
                     value={formData.email}
                     onChange={handleFormData}
+                    required
                 ></input>
                 <input
                     type="password"
@@ -81,6 +71,7 @@ export default function SignUpForm() {
                     name="password"
                     value={formData.password}
                     onChange={handleFormData}
+                    required
                 ></input>
                 <input
                     type="password"
@@ -88,6 +79,7 @@ export default function SignUpForm() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleFormData}
+                    required
                 ></input>
                 {err ? <p style={{color:"red"}}>{err}</p>:""}
             </form>
