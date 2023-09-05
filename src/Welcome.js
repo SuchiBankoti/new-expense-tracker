@@ -1,10 +1,42 @@
 import React, { useEffect, useState } from "react";
 
 const profileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
+const getProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
+
 
 export default function WelcomePage() {
     const [profile, setProfile] = useState(false)
-    const[token,setToken]=useState("")
+    const [token, setToken] = useState(localStorage.getItem('token'))
+    const [userProfile, setUserProfile] = useState({})
+    useEffect(() => {
+            fetch(getProfileApi, {
+                method: "POST",
+                body: JSON.stringify({
+                    idToken:token,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            })
+            .then(res => {
+                if (res.ok) {
+                    return res.json().then(data => {
+                        localStorage.setItem("token", data.idToken);
+                        setFormData(prev => ({
+                            ...prev,
+                            name: data.providerUserInfo.displayName,
+                            profilePictureUrl:data.providerUserInfo.photoUrl
+                        }))
+                        alert("Profile data successful");
+                    });
+                } else {
+                    alert("Profile data Failed");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    },[])
     const [formData, setFormData] = useState({
         name: "",
         profilePictureUrl:""
