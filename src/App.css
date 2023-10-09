@@ -56,3 +56,20 @@ input{
   margin: 0px 20px;
   border-radius: 18px;
 }
+.resetPasswordPage{
+  display: flex;
+    flex-direction: column;
+    width: 600px;
+    margin: auto;
+    border: 1px solid black;
+    height: 500px;
+    gap: 20px;
+    padding: 20px;
+}
+button{
+  width: 200px;
+  background-color: skyblue;
+  color: white;
+  height: 31px;
+  border-radius: 18px;
+}
