@@ -127,6 +127,11 @@ export default function WelcomePage() {
                     <button onClick={updateProfile}>Update</button>
             </div>:""
             }
+            <div>
+                <Link to="/add-expense">
+                <button>Add Expense</button>
+                </Link>
+            </div>
            
         </div>
     )
