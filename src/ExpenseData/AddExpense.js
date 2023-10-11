@@ -1,21 +1,51 @@
 import { nanoid } from "@ant-design/pro-components";
 import React, { useState } from "react";
-
+import { useEffect } from "react";
+const api="https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/"
 export default function AddExpense() {
     const [formdata, setFormdata] = useState({
         cost: "",
         detail: "",
         category:""
     })
-    const[tabledata,setTabledata]=useState([])
+    const [tabledata, setTabledata] = useState([])
+    const[trackdata,setTrackdata]=useState(0)
+    useEffect(() => {
+        async function getAllProductsData() {
+            const allproductResponse = await fetch(
+              `${api}/data/allExpenses.json`
+            );
+            const result = await allproductResponse.json();
+            const a = Object.entries(result);
+            const allExpenseData = a.map((e) => {
+                return e[1];
+            });
+            setTabledata(allExpenseData)
+        }
+        getAllProductsData()
+    }, [trackdata])
+    
+
     function handleChange(e) {
         setFormdata(prev=>({...prev,[e.target.name]:e.target.value}))
     }
     function pdata() {
-        console.log(formdata)
-        setTabledata(prev=>[...prev,formdata])
+        sendData()
     }
-    
+    function sendData() {
+        fetch(`${api}/data/allExpenses.json`, {
+            method: "POST",
+            headers: {
+                "Content-type":"application/json"
+                
+            },
+            body: JSON.stringify(formdata)
+        }).then(res => {
+            if (res.ok) {
+                setTrackdata(prev=>prev+1)
+            }
+        }).catch(e=>console.log(e))
+    }
     return (
         <div>
             <h1>Add Expense</h1>
@@ -55,12 +85,18 @@ export default function AddExpense() {
             </form>
             <button onClick={pdata} style={{margin:"20px"}}>Add data</button>
             <div>
-            <table border="1">
+                <table border="1">
+                    <thead>
+
     <tr>
         <th>Category</th>
         <th>Details</th>
         <th>Cost</th>
-    </tr>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                   
                     
                     {
                         tabledata.map(expense => {
@@ -71,7 +107,7 @@ export default function AddExpense() {
                             </tr>
                         })
           }
-
+ </tbody>
    
 </table>
             </div>

@@ -25,7 +25,7 @@ export default function WelcomePage() {
                         localStorage.setItem("token", data.idToken);
                         setFormData(prev => ({
                             ...prev,
-                            name: data.providerUserInfo.displayName,
+                            name: data.providerUserInfo.name,
                             profilePictureUrl:data.providerUserInfo.photoUrl
                         }))
                         alert("Profile data successful");
