@@ -9,7 +9,8 @@ export default function AddExpense() {
         category:""
     })
     const [tabledata, setTabledata] = useState([])
-    const[trackdata,setTrackdata]=useState(0)
+    const [trackdata, setTrackdata] = useState(0)
+    const [editmode, setEditmode] = useState(false)
     useEffect(() => {
         async function getAllProductsData() {
             const allproductResponse = await fetch(
@@ -18,33 +19,69 @@ export default function AddExpense() {
             const result = await allproductResponse.json();
             const a = Object.entries(result);
             const allExpenseData = a.map((e) => {
-                return e[1];
+                return {...e[1],id:e[0]};
             });
             setTabledata(allExpenseData)
         }
         getAllProductsData()
     }, [trackdata])
-    
+    console.log("taledata",tabledata)
 
     function handleChange(e) {
         setFormdata(prev=>({...prev,[e.target.name]:e.target.value}))
     }
-    function pdata() {
-        sendData()
-    }
+   
     function sendData() {
-        fetch(`${api}/data/allExpenses.json`, {
-            method: "POST",
-            headers: {
-                "Content-type":"application/json"
+            fetch(`${api}/data/allExpenses.json`, {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
                 
-            },
-            body: JSON.stringify(formdata)
+                },
+                body: JSON.stringify(formdata)
+            }).then(res => {
+                if (res.ok) {
+                    setTrackdata(prev => prev + 1)
+                }
+            }).catch(e => console.log(e))
+    }
+    function removeExpense(id) {
+        fetch(`${api}/data/allExpenses/${id}.json`, {
+            method:"DELETE"
         }).then(res => {
             if (res.ok) {
-                setTrackdata(prev=>prev+1)
+                alert("successfully deleted")
+                setTrackdata(prev=>prev-1)
+            }
+        })
+    }
+    function editExpense(id) {
+        fetch(`${api}/data/allExpenses/${id}.json`, {
+            method: "PUT",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+                cost: formdata.cost,
+                detail: formdata.detail,
+                category:formdata.category
+            })
+        }).then(res => {
+            if (res.ok) {
+                alert("successfully updated")
+                setEditmode(false)
+                setTrackdata(prev => prev - 1)
+                
+            } else {
+                alert("update failed")
             }
         }).catch(e=>console.log(e))
+    }
+    function activeEdit(id) {
+        setEditmode(true)
+        const editableItem = tabledata.find(e => e.id === id)
+        console.log(editableItem)
+        setFormdata(editableItem)
     }
     return (
         <div>
@@ -83,7 +120,9 @@ export default function AddExpense() {
                 </select>
                
             </form>
-            <button onClick={pdata} style={{margin:"20px"}}>Add data</button>
+            {!editmode ? <button onClick={sendData} style={{ margin: "20px" }}>Add data</button> :
+                <button onClick={()=>editExpense(formdata.id)} style={{ margin: "20px" }}>Update data</button>}
+            
             <div>
                 <table border="1">
                     <thead>
@@ -103,7 +142,13 @@ export default function AddExpense() {
                             return <tr key={nanoid()}>
                          <td>{expense.category}</td>
                                 <td>{expense.detail}</td>
-                         <td>{expense.cost}</td>
+                                <td>{expense.cost}</td>
+                                <td>
+                                <button onClick={()=>removeExpense(expense.id)}>Remove</button>
+                                </td>
+                                {!editmode?<td>
+                                    <button onClick={() =>activeEdit(expense.id)}>Edit</button>
+                                </td>:""}
                             </tr>
                         })
           }
