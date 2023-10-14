@@ -7,41 +7,45 @@ const getVerified="https://identitytoolkit.googleapis.com/v1/accounts:sendOobCod
 const confirmVerificationCode="https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 export default function WelcomePage() {
     const [profile, setProfile] = useState(false)
+    const [formData, setFormData] = useState({
+        name: "",
+        profilePictureUrl:""
+    })
     const [token, setToken] = useState(localStorage.getItem('token'))
     const [userProfile, setUserProfile] = useState({})
     useEffect(() => {
+        if (profile) {
             fetch(getProfileApi, {
                 method: "POST",
                 body: JSON.stringify({
-                    idToken:token,
+                    idToken: token,
                 }),
                 headers: {
                     "Content-Type": "application/json",
                 }
             })
-            .then(res => {
-                if (res.ok) {
-                    return res.json().then(data => {
-                        localStorage.setItem("token", data.idToken);
-                        setFormData(prev => ({
-                            ...prev,
-                            name: data.providerUserInfo.name,
-                            profilePictureUrl:data.providerUserInfo.photoUrl
-                        }))
-                        alert("Profile data successful");
-                    });
-                } else {
-                    alert("Profile data Failed");
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-            });
+                .then(res => {
+                    if (res.ok) {
+                        return res.json().then(data => {
+                            localStorage.setItem("token", data.idToken);
+                            // setFormData(prev => ({
+                            //     ...prev,
+                            //     name: data.providerUserInfo.name,
+                            //     profilePictureUrl:data.providerUserInfo.photoUrl
+                            // }))
+                            console.log("profile",data)
+                            alert("Profile data successful");
+                        });
+                    } else {
+                        alert("Profile data Failed");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
     },[])
-    const [formData, setFormData] = useState({
-        name: "",
-        profilePictureUrl:""
-    })
+   
     function handleChange(e) {
         setFormData(perv=>({...perv,[e.target.name]:e.target.value}))
     }
