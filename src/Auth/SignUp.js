@@ -1,9 +1,11 @@
 import React, { useState ,useEffect} from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { activateToken, authExpenseSignUp } from "../Store/CreateSlice";
 
-const signupApi = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
 
 export default function SignUpForm() {
+  const dispatch=useDispatch()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,32 +25,9 @@ export default function SignUpForm() {
   }
 
   function authNewUser() {
-    if (formData.email && formData.password && formData.confirmPassword) {
-      fetch(signupApi, {
-        method: "POST",
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => {
-          if (res.ok) {
-            return res.json().then((data) => {
-              localStorage.setItem("token", data.idToken);
-              alert("Account Successfully created");
-            });
-          } else {
-            alert("Authentication Failed");
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-    }
+    dispatch(authExpenseSignUp(formData))
+    dispatch(activateToken())
+   
   }
 
   function handleFormData(e) {
@@ -60,7 +39,6 @@ export default function SignUpForm() {
     });
   }
 
-  // Check if the form is valid (all fields are filled) and set isFormValid accordingly
   useEffect(() => {
     setIsFormValid(formData.email && formData.password && formData.confirmPassword);
   }, [formData.email, formData.password, formData.confirmPassword]);

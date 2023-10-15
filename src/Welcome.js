@@ -1,21 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import {activateToken, logoutUser} from "./Store/CreateSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-const profileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
+const updateProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
 const getProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 const getVerified="https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
-const confirmVerificationCode="https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
+// const confirmVerificationCode="https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 export default function WelcomePage() {
+  const {token} = useSelector((state) => state.expense)
+       const dispatch=useDispatch()
     const [profile, setProfile] = useState(false)
+    const [profileData, setProfileData] = useState({
+        name: "",
+        profilePictureUrl:""
+    })
     const [formData, setFormData] = useState({
         name: "",
         profilePictureUrl:""
     })
-    const [token, setToken] = useState(localStorage.getItem('token'))
-    const [userProfile, setUserProfile] = useState({})
     useEffect(() => {
-        if (profile) {
-            fetch(getProfileApi, {
+        async function getPro() {
+            const res=await fetch(getProfileApi, {
                 method: "POST",
                 body: JSON.stringify({
                     idToken: token,
@@ -24,36 +30,29 @@ export default function WelcomePage() {
                     "Content-Type": "application/json",
                 }
             })
-                .then(res => {
-                    if (res.ok) {
-                        return res.json().then(data => {
-                            localStorage.setItem("token", data.idToken);
-                            // setFormData(prev => ({
-                            //     ...prev,
-                            //     name: data.providerUserInfo.name,
-                            //     profilePictureUrl:data.providerUserInfo.photoUrl
-                            // }))
-                            console.log("profile",data)
-                            alert("Profile data successful");
-                        });
-                    } else {
-                        alert("Profile data Failed");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                });
+            const data = await res.json()
+            if (data.users) {
+                const profileContent = data.users[0]
+                 if (profileContent.displayName) {
+                setProfileData(prev=>({...prev,name:profileContent.displayName}))
+            }
+            if (profileContent.photoUrl) {
+                setProfileData(prev=>({...prev,profilePictureUrl:profileContent.photoUrl}))
+            }
+            }
         }
-    },[])
+        if (token) {
+            getPro()
+        }
+            
+    },[token])
    
     function handleChange(e) {
         setFormData(perv=>({...perv,[e.target.name]:e.target.value}))
     }
-    useEffect(() => {
-        const temp = localStorage.getItem("token")
-        setToken(temp)
-    }, [profile])
     
+
+
     function verifyEmail() {
         fetch(getVerified, {
             method: "POST",
@@ -78,11 +77,8 @@ export default function WelcomePage() {
         });
         }
 
-        function logoutUser() {
-            localStorage.removeItem("token");
-          }
-    function updateProfile() {
-        fetch(profileApi, {
+    async function updateProfile() {
+        const res=await fetch(updateProfileApi, {
             method: "POST",
             body: JSON.stringify({
                 idToken:token,
@@ -94,25 +90,15 @@ export default function WelcomePage() {
                 "Content-Type": "application/json",
             }
         })
-        .then(res => {
-            if (res.ok) {
-                return res.json().then(data => {
-                    localStorage.setItem("token", data.idToken);
-                    alert("Profile Successfully updated");
-                });
-            } else {
-                alert("Profile Update Failed");
-            }
-        })
-        .catch(error => {
-            console.error("Error:", error);
-        });
+        const data = await res.json()
+        console.log(data)
+        alert("Profile Successfully updated");
     }
     return (
         <div>
             <div>
                 <Link to="/">
-                <button onClick={logoutUser}>Logout</button>
+                <button onClick={()=>dispatch(logoutUser())}>Logout</button>
                 </Link>
             </div>
             <div style={{display:"flex"}}>
@@ -133,7 +119,7 @@ export default function WelcomePage() {
             }
             <div>
                 <Link to="/add-expense">
-                <button>Add Expense</button>
+                <button>Manage Expense</button>
                 </Link>
             </div>
            

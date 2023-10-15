@@ -1,48 +1,33 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
+import { activateToken, authExpenseLogin } from "../Store/CreateSlice";
+import { useDispatch } from "react-redux";
 
-const loginApi ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
+
+
+
 export default function LoginForm() {
+  const dispatch = useDispatch()
+  
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
+    const [isFormValid, setIsFormValid] = useState(false);
 
     function handleFormData(e) {
        setFormData(prev=>({...prev,[e.target.name]:e.target.value}))
    }
-    function authLogin() {
-          fetch(loginApi, {
-            method: "POST",
-            body: JSON.stringify({
-              email: formData.email,
-              password: formData.password,
-              returnSecureToken: true,
-            }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }).then((res) => {
-            if (res.ok) {
-              res.json().then((data) => {
-                localStorage.setItem("token",data.idToken);
-              });
-              alert(
-                "Succesfully logged in"
-              );
-            } else {
-              return res.json().then((data) => {
-                let errMsg = "Login Failed";
-                if (data && data.error && data.error.message) {
-                  errMsg = data.error.message;
-                }
-                alert(errMsg);
-              });
-            }
-          });
-      }
+   function authLogin() {
+    dispatch(authExpenseLogin(formData))
+    dispatch(activateToken())
+  }
 
-
+    useEffect(() => {
+        setIsFormValid(formData.email && formData.password);
+      }, [formData.email, formData.password]);
+  
+  
     return (<div className="authSubPage">
         <div>
             <h2 className="authPageTitle">Login</h2>
@@ -67,7 +52,9 @@ export default function LoginForm() {
         </div>
         <Link to="/welcome-page"><button className="authPageBtn" onClick={() => {
             authLogin()
-        }}>Login</button>
+      }}
+      disabled={!isFormValid}
+      >Login</button>
             </Link>
         
     </div>)
