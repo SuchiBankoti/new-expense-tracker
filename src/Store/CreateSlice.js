@@ -11,7 +11,8 @@ const initialState = {
     trackdata: 0,
     editmode: false,
     editableItemId: null,
-    token:null
+    token: null,
+    username:null,
 }
 export const authExpenseLogin = createAsyncThunk(
     "expense/login", (payload)=>{
@@ -62,19 +63,19 @@ export const authExpenseSignUp = createAsyncThunk(
 )
 export const getAllExpenses = createAsyncThunk(
     "expense/getAllExpenses",
-        () => {
-        return fetch(`${api}/data/allExpenses.json`).then(data=>data.json()).catch(e=>console.log(e))
+        (payload) => {
+        return fetch(`${api}/data/${payload}/allExpenses.json`).then(data=>data.json()).catch(e=>console.log(e))
     }
 )
 export const addExpenseData = createAsyncThunk(
     "expense/addExpenseData",
     (payload) => {
-        return fetch(`${api}/data/allExpenses.json`, {
+        return fetch(`${api}/data/${payload.username}/allExpenses.json`, {
             method: "POST",
             headers: {
               "Content-type": "application/json"
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload.formdata)
           }).then((res) => {
               if (res.ok) {
                 return res.json();
@@ -90,7 +91,7 @@ export const addExpenseData = createAsyncThunk(
 export const removeExpenseData = createAsyncThunk(
     "expense/removeExpenseData",
     (payload) => {
-        return fetch(`${api}/data/allExpenses/${payload}.json`, {
+        return fetch(`${api}/data/${payload.username}/allExpenses/${payload.id}.json`, {
             method: "DELETE"
           }).then((res) => {
             if (res.ok) {
@@ -108,7 +109,7 @@ export const removeExpenseData = createAsyncThunk(
 export const updateExpenseData = createAsyncThunk(
     "expense/updateExpenseData",
     (payload) => {
-        return fetch(`${api}/data/allExpenses/${payload.id}.json`, {
+        return fetch(`${api}/data/${payload.username}/allExpenses/${payload.id}.json`, {
             method: "PUT",
             headers: {
               "Content-type": "application/json"
@@ -136,6 +137,7 @@ const expenseSlice = createSlice({
     reducers: {
         activateEdit: (state, action) => {
             state.editmode = true
+            console.log("edit",action.payload)
             state.editableItemId=action.payload
         },
         activateToken: (state) => {
@@ -143,7 +145,14 @@ const expenseSlice = createSlice({
         },
         logoutUser:(state)=>{
             localStorage.removeItem("token");
-    }
+        },
+        setUsername: (state, action) => {
+            state.username = localStorage.getItem("expenseUsername")
+            
+        },
+        getTotalAmount: (state, action) => {
+            state.totalAmount=action.payload
+        }
     },
     extraReducers: {
         [getAllExpenses.pending]: (state) => {
@@ -151,12 +160,19 @@ const expenseSlice = createSlice({
         },
         [getAllExpenses.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payload', action.payload)
-            const a = Object.entries(action.payload);
-            const allExpenseData = a.map((e) => {
-              return { ...e[1], id: e[0] };
-            });
-            state.allExpenses=allExpenseData
+            console.log('payloadgetall', action.payload)
+            if (action.payload) {
+                const a = Object.entries(action.payload);
+                const allExpenseData = a.map((e) => {
+                    return { ...e[1], id: e[0] };
+                });
+                const total = allExpenseData.reduce((sum,e) => {
+                    sum += Number(e.cost)
+                    return sum
+                },0)
+                state.allExpenses = allExpenseData
+                state.totalAmount = total
+            }
         },
         [getAllExpenses.rejected]: (state) => {
             state.isLoading=false
@@ -226,7 +242,7 @@ const expenseSlice = createSlice({
 
 });
 
-export const{activateEdit, activateToken, logoutUser}=expenseSlice.actions
+export const{activateEdit, activateToken, logoutUser,setUsername, getTotalAmount}=expenseSlice.actions
 
 export default expenseSlice.reducer
 

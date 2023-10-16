@@ -1,14 +1,13 @@
 import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
-import { activateToken, authExpenseLogin } from "../Store/CreateSlice";
-import { useDispatch } from "react-redux";
+import { activateToken, authExpenseLogin, setUsername } from "../Store/CreateSlice";
+import { useDispatch, useSelector } from "react-redux";
 
-
+const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 
 export default function LoginForm() {
   const dispatch = useDispatch()
-  
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -22,7 +21,11 @@ export default function LoginForm() {
     dispatch(authExpenseLogin(formData))
     dispatch(activateToken())
   }
-
+    function sendUsername() {
+        const name = formData.email.match(/^(.+)@/)[1];
+        localStorage.setItem("expenseUsername",name)
+             dispatch(setUsername())
+}
     useEffect(() => {
         setIsFormValid(formData.email && formData.password);
       }, [formData.email, formData.password]);
@@ -50,12 +53,16 @@ export default function LoginForm() {
             <p style={{color:"blue"}}>Forgot Password?</p>
         </Link>
         </div>
+
         <Link to="/welcome-page"><button className="authPageBtn" onClick={() => {
-            authLogin()
-      }}
-      disabled={!isFormValid}
-      >Login</button>
+            sendUsername()
+                authLogin()
+          }}
+          disabled={!isFormValid}
+          >Login</button>
             </Link>
+       
+       
         
     </div>)
 }

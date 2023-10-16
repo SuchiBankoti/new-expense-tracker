@@ -2,31 +2,37 @@ import { nanoid } from "@ant-design/pro-components";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import { getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData} from "../Store/CreateSlice";
+import { getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
 
-const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 export default function AddExpense() {
-  const { allExpenses,trackdata,editmode,editableItemId } = useSelector((state) => state.expense)
+  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount } = useSelector((state) => state.expense)
+  console.log("username", username)
   const dispatch=useDispatch()
   const [formdata, setFormdata] = useState({
     cost: "",
     detail: "",
     category: ""
   });
+  useEffect(() => {
+    dispatch(setUsername())
+  }, [])
+  
 
   useEffect(() => {
-    dispatch(getAllExpenses())
+    dispatch(getAllExpenses(username))
     if (!editmode) {
       setFormdata({ cost: "", detail: "", category: "" });
     }
-  }, [trackdata]);
+  }, [trackdata,username]);
 
+
+  
+ 
+  
   function handleChange(e) {
     setFormdata((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
-
-  
 
   function activeEdit(id) {
     dispatch(activateEdit(id))
@@ -36,47 +42,71 @@ export default function AddExpense() {
 
   return (
     <div>
+      <h2>{username}</h2>
       <h1>Add Expense</h1>
-      <form>
-        <label>Cost</label>
-        <input
-          value={formdata.cost}
-          type="number"
-          name="cost"
-          onChange={handleChange}
-        />
-        <label>Detail</label>
-        <input
-          value={formdata.detail}
-          type="text"
-          name="detail"
-          onChange={handleChange}
-        />
-        <label>Category</label>
-        <select value={formdata.category} name="category" onChange={handleChange}>
-        <option value="">Select</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Clothes">Clothes</option>
-          <option value="Cosmetics">Cosmetics</option>
-          <option value="Shoes">Shoes</option>
-          <option value="Other">Other</option>
-        </select>
-      </form>
-      {!editmode ? (
-        <button onClick={()=> dispatch(addExpenseData(formdata))} style={{ margin: "20px" }}>
-          Add data
-        </button>
-      ) : (
-        <button onClick={() => dispatch(updateExpenseData({
-          id: editableItemId,
-          formdata:formdata
-        }))} style={{ margin: "20px" }}>
-          Update data
-        </button>
-      )}
-
+      {totalAmount >=1000 ?
+        <>
+          <h1>get<button>Premium</button>to add more than 1000</h1>
+        </> :
+          <>
+      
+          <form>
+            <label>Cost</label>
+            <input
+              value={formdata.cost}
+              type="number"
+              name="cost"
+              onChange={handleChange}
+            />
+            <label>Detail</label>
+            <input
+              value={formdata.detail}
+              type="text"
+              name="detail"
+              onChange={handleChange}
+            />
+            <label>Category</label>
+            <select value={formdata.category} name="category" onChange={handleChange}>
+            <option value="">Select</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Clothes">Clothes</option>
+              <option value="Cosmetics">Cosmetics</option>
+              <option value="Shoes">Shoes</option>
+              <option value="Other">Other</option>
+            </select>
+          </form>
+          {!editmode ? (
+            <button onClick={() => {
+              if ((Number(formdata.cost) + totalAmount) > 1000) {
+                alert("go premium to add more")
+              } else {
+                dispatch(addExpenseData({ formdata: formdata, username: username }))
+              }
+            }
+            } style={{ margin: "20px" }}>
+              Add data
+            </button>
+          ) : (
+              <button onClick={() => {
+                if ((Number(formdata.cost) + totalAmount) > 1000) {
+                  alert("go premium to add more")
+                } else {
+                  dispatch(updateExpenseData({
+                    id: editableItemId,
+                    formdata: formdata,
+                    username: username
+                  }))
+                }
+              }
+              } style={{ margin: "20px" }}>
+              Update data
+            </button>
+          )}
+                   </> 
+      }
+    
       <div>
         <table border="1">
           <thead>
@@ -93,7 +123,7 @@ export default function AddExpense() {
                 <td>{expense.detail}</td>
                 <td>{expense.cost}</td>
                 <td>
-                  <button onClick={() =>  dispatch(removeExpenseData(expense.id))}>Remove</button>
+                  <button onClick={() => dispatch(removeExpenseData({ id: expense.id,username:username}))}>Remove</button>
                 </td>
                 {!editmode && (
                   <td>
@@ -104,7 +134,8 @@ export default function AddExpense() {
             ))}
           </tbody>
         </table>
-        <button onClick={()=>dispatch(getAllExpenses())}>check</button>
+        <div>total:{totalAmount}</div>
+        <button onClick={()=>dispatch(getAllExpenses(username))}>check</button>
       </div>
     </div>
   );

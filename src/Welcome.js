@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {activateToken, logoutUser} from "./Store/CreateSlice";
+import {activateToken, getAllExpenses, logoutUser} from "./Store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { nanoid } from "@reduxjs/toolkit";
 
 const updateProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
 const getProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 const getVerified="https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 // const confirmVerificationCode="https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 export default function WelcomePage() {
-  const {token} = useSelector((state) => state.expense)
+  const {token,allExpenses,username,totalAmount} = useSelector((state) => state.expense)
        const dispatch=useDispatch()
     const [profile, setProfile] = useState(false)
     const [profileData, setProfileData] = useState({
@@ -94,6 +95,9 @@ export default function WelcomePage() {
         console.log(data)
         alert("Profile Successfully updated");
     }
+    useEffect(() => {
+        dispatch(getAllExpenses(username))
+    },[])
     return (
         <div>
             <div>
@@ -102,7 +106,7 @@ export default function WelcomePage() {
                 </Link>
             </div>
             <div style={{display:"flex"}}>
-                <h1>Welcome To expense tracker</h1>
+                <h1>Welcome To expense tracker<span>{username}</span></h1>
                 <button className="verificationBtn" onClick={verifyEmail}>Verify Email</button>
             <div>Your profile is Incomplete.<span onClick={() => setProfile(true)} style={{color:"blue",cursor:"pointer"}}>Complete Now</span></div>
             </div>
@@ -122,6 +126,34 @@ export default function WelcomePage() {
                 <button>Manage Expense</button>
                 </Link>
             </div>
+            <div>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Details</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allExpenses.map((expense) => (
+              <tr key={nanoid()}>
+                <td>{expense.category}</td>
+                <td>{expense.detail}</td>
+                <td>{expense.cost}</td>
+              </tr>
+            ))}
+          </tbody>
+                </table>
+                {
+                    totalAmount >= 1000 ?
+                        <h1>get<button>Premium</button>to add more than 1000</h1>
+                        :
+                        <div>total:{totalAmount}</div>
+                        
+                }
+      </div>
+            
            
         </div>
     )

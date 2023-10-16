@@ -1,10 +1,12 @@
 import React, { useState ,useEffect} from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { activateToken, authExpenseSignUp } from "../Store/CreateSlice";
+import { activateToken, authExpenseSignUp, setUsername } from "../Store/CreateSlice";
 
 
 export default function SignUpForm() {
+    // const username = email.match(/^(.+)@/)[1];
+
   const dispatch=useDispatch()
   const [formData, setFormData] = useState({
     email: "",
@@ -29,6 +31,11 @@ export default function SignUpForm() {
     dispatch(activateToken())
    
   }
+  function sendUsername() {
+    const name = formData.email.match(/^(.+)@/)[1];
+    localStorage.setItem("expenseUsername",name)
+    dispatch(setUsername())
+}
 
   function handleFormData(e) {
     setFormData((prev) => {
@@ -75,10 +82,11 @@ export default function SignUpForm() {
         </form>
         {err ? <p style={{ color: "red" }}>{err}</p> : ""}
       </div>
-      <Link to="/welcome-page">
+      <Link to="/username-page">
         <button
           className="authPageBtn"
           onClick={() => {
+            sendUsername()
             if (formData.password === formData.confirmPassword) {
               setFormData("");
               authNewUser();
