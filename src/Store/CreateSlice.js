@@ -3,7 +3,9 @@ import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
 const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 const loginApi ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
 const signupApi = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
-
+const getVerified="https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
+const getProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0"
+const updateProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyDvMhMxDWfRmYEbmRy4ORKoiOLsxpVokq0";
 const initialState = {
     allExpenses: [],
     totalAmount:0,
@@ -12,15 +14,23 @@ const initialState = {
     editmode: false,
     editableItemId: null,
     token: null,
-    username:null,
+    username: null,
+    isUserVerified: false,
+    profileInfo: {
+        name: "",
+        photoUrl:""
+    },
+    completeProfile: false,
+    theme:"light"
+    
 }
 export const authExpenseLogin = createAsyncThunk(
-    "expense/login", (payload)=>{
+    "expense/login", (payload) => {
         return fetch(loginApi, {
           method: "POST",
           body: JSON.stringify({
-            email: payload.email,
-            password: payload.password,
+            email:payload.email,
+            password:payload.password,
             returnSecureToken: true,
           }),
           headers: {
@@ -32,7 +42,10 @@ export const authExpenseLogin = createAsyncThunk(
             }else {
                 return Promise.reject("Request failed with status: " + res.status);
               }
-        })
+        }).catch(e => {
+            console.log(e)
+            return Promise.reject(e);
+        });
     }
 )
 export const authExpenseSignUp = createAsyncThunk(
@@ -40,14 +53,14 @@ export const authExpenseSignUp = createAsyncThunk(
         if (payload.email && payload.password && payload.confirmPassword) {
             return fetch(signupApi, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
                 body: JSON.stringify({
                     email: payload.email,
                     password:payload.password,
                     returnSecureToken: true,
                 }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
             }).then(res => {
                 if (res.ok) {
                     return res.json();
@@ -61,6 +74,76 @@ export const authExpenseSignUp = createAsyncThunk(
         }
     }
 )
+export const verifyUserEmail = createAsyncThunk(
+    "expense/verifyEmail", (payload) => {
+        
+            return fetch(getVerified, {
+                method: "POST",
+                body: JSON.stringify({
+                    requestType:"VERIFY_EMAIL",
+                    idToken:payload
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then(res => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    return Promise.reject("Request failed with status: " + res.status);
+                }
+            }).catch(e => {
+                console.log(e)
+                return Promise.reject(e);
+            });
+        }
+    
+)
+export const getUserProfile = createAsyncThunk("expense/getProfile", (payload) => {
+    return fetch(getProfileApi, {
+        method: "POST",
+        body: JSON.stringify({
+            idToken: payload,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then((res) => {
+        if (res.ok) {
+          return res.json();
+      }else {
+          return Promise.reject("Request failed with status: " + res.status);
+        }
+    }).catch(e => {
+        console.log(e)
+        return Promise.reject(e);
+    });
+})
+
+export const updateUserProfile = createAsyncThunk("expense/updateProfile", (payload) => {
+    return fetch(updateProfileApi, {
+        method: "POST",
+        body: JSON.stringify({
+            idToken:payload.token,
+            displayName:payload.formData.name,
+            photoUrl:payload.formData.photoUrl,
+            returnSecureToken: true,
+        }),
+        headers: {
+            "Content-Type": "application/json",
+        }
+    }).then((res) => {
+        if (res.ok) {
+          return res.json();
+      }else {
+          return Promise.reject("Request failed with status: " + res.status);
+        }
+    }).catch(e => {
+        console.log(e)
+        return Promise.reject(e);
+    });
+})
+
 export const getAllExpenses = createAsyncThunk(
     "expense/getAllExpenses",
         (payload) => {
@@ -137,7 +220,6 @@ const expenseSlice = createSlice({
     reducers: {
         activateEdit: (state, action) => {
             state.editmode = true
-            console.log("edit",action.payload)
             state.editableItemId=action.payload
         },
         activateToken: (state) => {
@@ -145,6 +227,7 @@ const expenseSlice = createSlice({
         },
         logoutUser:(state)=>{
             localStorage.removeItem("token");
+            localStorage.removeItem("expenseUsername")
         },
         setUsername: (state, action) => {
             state.username = localStorage.getItem("expenseUsername")
@@ -152,6 +235,12 @@ const expenseSlice = createSlice({
         },
         getTotalAmount: (state, action) => {
             state.totalAmount=action.payload
+        },
+        activateCompleteProfile: (state,action) => {
+            state.completeProfile=action.payload
+        },
+        activatePremium: (state,action) => {
+            state.theme=action.payload
         }
     },
     extraReducers: {
@@ -160,7 +249,6 @@ const expenseSlice = createSlice({
         },
         [getAllExpenses.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadgetall', action.payload)
             if (action.payload) {
                 const a = Object.entries(action.payload);
                 const allExpenseData = a.map((e) => {
@@ -182,7 +270,6 @@ const expenseSlice = createSlice({
         },
         [addExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadforpost', action.payload)
             state.trackdata=state.trackdata+1
         },
         [addExpenseData.rejected]: (state) => {
@@ -193,7 +280,6 @@ const expenseSlice = createSlice({
         },
         [removeExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadfordelete', action.payload)
             state.trackdata=state.trackdata-1
         },
         [removeExpenseData.rejected]: (state) => {
@@ -204,7 +290,6 @@ const expenseSlice = createSlice({
         },
         [updateExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadforupdate', action.payload)
             state.editmode =false
             state.trackdata=state.trackdata+1
             state.editableItemId=null
@@ -212,14 +297,11 @@ const expenseSlice = createSlice({
         [updateExpenseData.rejected]: (state) => {
             state.isLoading=false
         },
-    },
-    authReducer: {
         [authExpenseLogin.pending]: (state) => {
             state.isLoading=true
         },
         [authExpenseLogin.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadforlogin', action.payload)
             localStorage.setItem("token", action.payload.idToken);
             state.token=localStorage.getItem("token")
         },
@@ -231,18 +313,65 @@ const expenseSlice = createSlice({
         },
         [authExpenseSignUp.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('payloadforsignup', action.payload)
             localStorage.setItem("token", action.payload.idToken);
             state.token=localStorage.getItem("token")
         },
         [authExpenseSignUp.rejected]: (state) => {
             state.isLoading=false
         },
+        [verifyUserEmail.pending]: (state) => {
+            state.isLoading=true
+        },
+        [verifyUserEmail.fulfilled]: (state, action) => {
+            state.isLoading = false
+            alert("email verification mail sent")
+            state.isUserVerified=true
+        },
+        [verifyUserEmail.rejected]: (state) => {
+            state.isLoading = false
+            alert("email verification failed")
+        },
+        [getUserProfile.pending]: (state) => {
+            state.isLoading=true
+        },
+        [getUserProfile.fulfilled]: (state, action) => {
+            state.isLoading = false
+            const data=action.payload.users[0]
+            if (data) {
+                if (data.displayName) {
+                    state.profileInfo.name=data.displayName
+                }
+                if (data.photoUrl) {
+                    state.profileInfo.photoUrl=data.photoUrl
+                }
+            }
+        },
+        [getUserProfile.rejected]: (state) => {
+            state.isLoading = false
+            alert("profile failed")
+        },
+        [updateUserProfile.pending]: (state) => {
+            state.isLoading=true
+        },
+        [updateUserProfile.fulfilled]: (state, action) => {
+            state.isLoading = false
+            if (action.payload.displayName) {
+                state.profileInfo.name=action.payload.displayName
+            }
+            if (action.payload.photoUrl) {
+                state.profileInfo.photoUrl=action.payload.photoUrl
+            }
+            
+        },
+        [updateUserProfile.rejected]: (state) => {
+            state.isLoading = false
+            alert("profile update failed")
+        },
     }
 
 });
 
-export const{activateEdit, activateToken, logoutUser,setUsername, getTotalAmount}=expenseSlice.actions
+export const{activatePremium,activateEdit, activateToken, logoutUser,setUsername, getTotalAmount,activateCompleteProfile}=expenseSlice.actions
 
 export default expenseSlice.reducer
 

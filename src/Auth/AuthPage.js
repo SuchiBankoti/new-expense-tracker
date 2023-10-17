@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import SignUpForm from "./SignUp";
 import LoginForm from "./Login";
+import Navbar from "../Navbar";
 
 export default function AuthPage() {
     const[isLogin,setIsLogin]=useState(false)
     return (<div className="AuthPage"> 
+        
         {!isLogin?
      <SignUpForm />:
         <LoginForm />

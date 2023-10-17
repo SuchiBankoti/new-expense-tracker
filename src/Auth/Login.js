@@ -1,12 +1,13 @@
 import React, { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
-import { activateToken, authExpenseLogin, setUsername } from "../Store/CreateSlice";
+import { activateToken, authExpenseLogin, getUserProfile, setUsername } from "../Store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 
 export default function LoginForm() {
+    const{token}=useSelector((state)=>state.expense)
   const dispatch = useDispatch()
     const [formData, setFormData] = useState({
         email: "",
@@ -17,7 +18,7 @@ export default function LoginForm() {
     function handleFormData(e) {
        setFormData(prev=>({...prev,[e.target.name]:e.target.value}))
    }
-   function authLogin() {
+    function authLogin() {
     dispatch(authExpenseLogin(formData))
     dispatch(activateToken())
   }
@@ -30,7 +31,7 @@ export default function LoginForm() {
         setIsFormValid(formData.email && formData.password);
       }, [formData.email, formData.password]);
   
-  
+    
     return (<div className="authSubPage">
         <div>
             <h2 className="authPageTitle">Login</h2>

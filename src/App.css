@@ -73,3 +73,9 @@ button{
   height: 31px;
   border-radius: 18px;
 }
+.addExpensePage{
+  background-color: transparent;
+}
+.welcomePage{
+  background-color: transparent;
+}

@@ -2,12 +2,13 @@ import { nanoid } from "@ant-design/pro-components";
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import { getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
+import {getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
+import Navbar from "../Navbar";
+import DownloadButton from "./Download";
 
 
 export default function AddExpense() {
-  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount } = useSelector((state) => state.expense)
-  console.log("username", username)
+  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme } = useSelector((state) => state.expense)
   const dispatch=useDispatch()
   const [formdata, setFormdata] = useState({
     cost: "",
@@ -26,7 +27,17 @@ export default function AddExpense() {
     }
   }, [trackdata,username]);
 
+  
 
+useEffect(() => {
+    if (username) {
+        dispatch(getAllExpenses(username))
+    } else {
+        const localname = localStorage.getItem("expenseUsername")
+        dispatch(getAllExpenses(localname))
+        dispatch(setUsername())
+    }
+}, [])
   
  
   
@@ -41,12 +52,17 @@ export default function AddExpense() {
   }
 
   return (
-    <div>
+    <div className="addExpensePage"
+      style={{
+        color: theme === "light" ? "black" : "white",
+        background: theme === "light" ? "white" : "black"
+      }}>
+      <Navbar/>
       <h2>{username}</h2>
       <h1>Add Expense</h1>
       {totalAmount >=1000 ?
         <>
-          <h1>get<button>Premium</button>to add more than 1000</h1>
+          <h1>get Premium to add more than 1000</h1>
         </> :
           <>
       
@@ -135,7 +151,9 @@ export default function AddExpense() {
           </tbody>
         </table>
         <div>total:{totalAmount}</div>
-        <button onClick={()=>dispatch(getAllExpenses(username))}>check</button>
+        <div>
+          <DownloadButton/>
+        </div>
       </div>
     </div>
   );
