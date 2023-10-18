@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {activateCompleteProfile, activatePremium, activateToken, getAllExpenses, getUserProfile, logoutUser, setUsername, updateUserProfile, verifyUserEmail, } from "./Store/CreateSlice";
+import { activatePremium, getAllExpenses,  setUsername} from "./Store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import Navbar from "./Navbar";
 import DownloadButton from "./ExpenseData/Download";
+import { FaPen} from 'react-icons/fa';
 
 export default function WelcomePage() {
-  const {token,allExpenses,username,totalAmount,profileInfo,completeProfile,theme} = useSelector((state) => state.expense)
-       const dispatch=useDispatch()
-    const [formData, setFormData] = useState({
-        name: profileInfo.name,
-        photoUrl:profileInfo.photoUrl
-    })
+  const {allExpenses,username,totalAmount,theme,premium} = useSelector((state) => state.expense)
+    const dispatch = useDispatch()
     
-    
+
+
     useEffect(() => {
         if (username) {
             dispatch(getAllExpenses(username))
@@ -25,10 +23,7 @@ export default function WelcomePage() {
         }
     }, [])
     
-    function handleChange(e) {
-        setFormData(perv=>({...perv,[e.target.name]:e.target.value}))
-    }
-
+   
 
 
     return (
@@ -38,30 +33,14 @@ export default function WelcomePage() {
         }}>
             
             <Navbar/>
-            <div style={{display:"flex"}}>
-                <h1>Welcome To expense tracker<span>{username}</span></h1>
-            </div>
-            {
-                completeProfile? <div className="Profile">
-                <form>
-                    <label>Full name</label>
-                    <input name="name" type="text" value={formData.name} onChange={handleChange}/>
-                    <label>Profile Photo url</label>
-                    <input name="photoUrl" type="url" value={formData.photoUrl} onChange={handleChange}/>
-                    </form>
-                    <button onClick={() => {
-                        dispatch(updateUserProfile({ token: token, formData: formData }))
-                        dispatch(activateCompleteProfile(false))
-                    }
-                    }>Update</button>
-            </div>:""
-            }
-            <div>
+            <div style={{display:"flex",alignItems:"center",padding:"10px 15px",gap:"10px"}}>
                 <Link to="/add-expense">
-                <button>Manage Expense</button>
+                <FaPen className="icon" style={{color:theme==="light"?"black":"white"}}/>
                 </Link>
+                <h2>Day to day expenses</h2>
+                <DownloadButton/>
             </div>
-            <div>
+            <div className="table">
         <table border="1">
           <thead>
             <tr>
@@ -81,19 +60,17 @@ export default function WelcomePage() {
           </tbody>
                 </table>
                 {
-                    totalAmount >= 1000 ?
-                        <>
-                        <h1>get Premium to add more than 1000</h1>
+                    (totalAmount >= 1000 && !premium) ?
+                        <div className="premiumText">
+                        <div>get Premium to add more than 1000</div>
                             <button onClick={()=>{dispatch(activatePremium("dark"))}}>Activate Premium</button>
-                        </>
+                        </div>
                         :
-                        <div>total:{totalAmount}</div>
+                        <button style={{margin:"15px 0px"}}>total:{totalAmount}</button>
                         
                 }
       </div>
-            <div>
-                <DownloadButton/>
-            </div>
+               
            
         </div>
     )

@@ -21,7 +21,8 @@ const initialState = {
         photoUrl:""
     },
     completeProfile: false,
-    theme:"light"
+    theme: "light",
+    premium:false,
     
 }
 export const authExpenseLogin = createAsyncThunk(
@@ -239,7 +240,11 @@ const expenseSlice = createSlice({
         activateCompleteProfile: (state,action) => {
             state.completeProfile=action.payload
         },
-        activatePremium: (state,action) => {
+        activatePremium: (state, action) => {
+            state.premium=true
+            state.theme=action.payload
+        },
+        switchTheme: (state, action) => {
             state.theme=action.payload
         }
     },
@@ -348,7 +353,6 @@ const expenseSlice = createSlice({
         },
         [getUserProfile.rejected]: (state) => {
             state.isLoading = false
-            alert("profile failed")
         },
         [updateUserProfile.pending]: (state) => {
             state.isLoading=true
@@ -371,7 +375,7 @@ const expenseSlice = createSlice({
 
 });
 
-export const{activatePremium,activateEdit, activateToken, logoutUser,setUsername, getTotalAmount,activateCompleteProfile}=expenseSlice.actions
+export const{switchTheme,activatePremium,activateEdit, activateToken, logoutUser,setUsername, getTotalAmount,activateCompleteProfile}=expenseSlice.actions
 
 export default expenseSlice.reducer
 

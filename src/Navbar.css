@@ -1,0 +1,102 @@
+.navbar{
+height: 60px;
+padding: 10px 15px;
+position: relative;
+display: flex;
+justify-content: space-between;
+}
+.profileSection{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.sidebar {
+    position: fixed;
+    top: 0px;
+    left: -100%; /* Initially hidden */
+    width: 350px;
+    height: 100%;
+    opacity: 0; /* Initially transparent */
+    transform: translateX(-20px); /* Slightly off-screen */
+    transition: all 0.6s ease; /* Add smooth transition */
+    padding: 10px 15px;
+    align-items:flex-start;
+  }
+  
+  .sidebar.active {
+    left: 0; /* Slide in from the left */
+    opacity: 1; /* Fade in */
+    transform: translateX(0); /* Reset position */
+  }
+  .sidebarContentSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:20px;
+  }
+  
+.profileSection>img{
+ width: 45px;
+ height:45px;
+ border-radius: 50%;
+}
+.profileSection>div{
+    color: red;
+
+}
+.verificationBtn{
+
+}
+.toggleThemeBtn{
+
+}
+
+.editProfileBar {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: -100vw; /* Initially hidden on the right */
+    width:100vw;
+    height: 100%;
+    opacity: 0; /* Initially transparent */
+    transform: translateX(20px); /* Slightly off-screen to the right */
+    transition: all 0.3s ease; /* Add smooth transition */
+  }
+  
+  .editProfileBar.active {
+    right:0; /* Slide in from the right */
+    opacity: 1; /* Fade in */
+    transform: translateX(0); /* Reset position */
+  }
+
+  .toggleSwitch {
+    width: 60px;
+    height: 30px;
+    background: grey;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid grey;
+  }
+  
+  .toggleSwitch.active {
+    background: black;
+  }
+  
+  .toggleBall {
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+  }
+  
+  .toggleSwitch.active .toggleBall {
+    transform: translateX(30px);
+  }
+  
+  

@@ -4,8 +4,7 @@ import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import {getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
 import Navbar from "../Navbar";
-import DownloadButton from "./Download";
-
+import { FaDumpster,FaPen } from "react-icons/fa";
 
 export default function AddExpense() {
   const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme } = useSelector((state) => state.expense)
@@ -58,14 +57,6 @@ useEffect(() => {
         background: theme === "light" ? "white" : "black"
       }}>
       <Navbar/>
-      <h2>{username}</h2>
-      <h1>Add Expense</h1>
-      {totalAmount >=1000 ?
-        <>
-          <h1>get Premium to add more than 1000</h1>
-        </> :
-          <>
-      
           <form>
             <label>Cost</label>
             <input
@@ -82,7 +73,7 @@ useEffect(() => {
               onChange={handleChange}
             />
             <label>Category</label>
-            <select value={formdata.category} name="category" onChange={handleChange}>
+            <select value={formdata.category} name="category" onChange={handleChange} style={{color:theme==="light"?"black":"white"}}>
             <option value="">Select</option>
               <option value="Food">Food</option>
               <option value="Transport">Transport</option>
@@ -101,7 +92,17 @@ useEffect(() => {
                 dispatch(addExpenseData({ formdata: formdata, username: username }))
               }
             }
-            } style={{ margin: "20px" }}>
+            } style={{ margin: "20px" }}
+          disabled={() =>
+          {
+            if (totalAmount >= 1000 || Number(formdata.cost) > 1000) {
+              return false
+            } else {
+              return true
+            }
+            }
+          }
+        >
               Add data
             </button>
           ) : (
@@ -116,14 +117,23 @@ useEffect(() => {
                   }))
                 }
               }
-              } style={{ margin: "20px" }}>
+              } style={{ margin: "20px" }}
+              disabled={() =>
+                {
+                  if (totalAmount >= 1000 || Number(formdata.cost) > 1000) {
+                    return false
+                  } else {
+                    return true
+                  }
+                  }
+                }
+          >
               Update data
             </button>
           )}
-                   </> 
-      }
+                   
     
-      <div>
+      <div className="table">
         <table border="1">
           <thead>
             <tr>
@@ -139,11 +149,11 @@ useEffect(() => {
                 <td>{expense.detail}</td>
                 <td>{expense.cost}</td>
                 <td>
-                  <button onClick={() => dispatch(removeExpenseData({ id: expense.id,username:username}))}>Remove</button>
+                  <FaDumpster onClick={() => dispatch(removeExpenseData({ id: expense.id,username:username}))} className="icon"/>
                 </td>
                 {!editmode && (
                   <td>
-                    <button onClick={() => activeEdit(expense.id)}>Edit</button>
+                    <FaPen onClick={() => activeEdit(expense.id)} className="icon"/>
                   </td>
                 )}
               </tr>
@@ -151,9 +161,7 @@ useEffect(() => {
           </tbody>
         </table>
         <div>total:{totalAmount}</div>
-        <div>
-          <DownloadButton/>
-        </div>
+         
       </div>
     </div>
   );

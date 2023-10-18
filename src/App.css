@@ -1,13 +1,14 @@
 .AuthPage{
  border: 1px solid black;
- width: 50vw;
- height: 50vh;
+ width: (100vw - 20px);
+ height: 100vh;
  border-radius: 15px;
  background-color: aliceblue;
  padding: 10px;
  display: flex;
  flex-direction: column;
  gap:15px;
+ margin: auto;
 }
 
 .authSubPage{
@@ -32,7 +33,8 @@ input{
   border: 1px solid gray;
   border-radius: 8px;
   text-align:start;
-  width: 100%;
+  width: 90%;
+  background: transparent;
 }
 .authPageBtn{
   border-radius: 20px;
@@ -75,7 +77,37 @@ button{
 }
 .addExpensePage{
   background-color: transparent;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap:50px;
+  
 }
 .welcomePage{
   background-color: transparent;
+  width: 100%;
+  height: 100%;
+}
+.icon{
+  font-size: 15px;
+  cursor: pointer;
+}
+table{
+  width: 100%;
+
+}
+thead{
+  text-align:left;
+}
+.premiumText{
+  margin-top: 20px;
+  color: skyblue;
+}
+select{
+  background: transparent;
+
+}
+.table{
+  padding: 10px 15px;
 }

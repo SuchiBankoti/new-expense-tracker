@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-
+import { FaDownload } from "react-icons/fa";
 function DownloadButton() {
     const{allExpenses}=useSelector(state=>state.expense)
   const downloadFile = () => {
@@ -20,8 +20,8 @@ function DownloadButton() {
   };
 
   return (
-    <div>
-      <button onClick={downloadFile}>Download File</button>
+    <div style={{marginLeft:"20px"}}>
+      <FaDownload onClick={downloadFile} className="icon"/>
     </div>
   );
 }
