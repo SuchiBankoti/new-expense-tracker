@@ -20,7 +20,7 @@ export default function LoginForm() {
    }
     function authLogin() {
     dispatch(authExpenseLogin(formData))
-    dispatch(activateToken())
+        dispatch(activateToken())
   }
     function sendUsername() {
         const name = formData.email.match(/^(.+)@/)[1];

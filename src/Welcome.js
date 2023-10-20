@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { activatePremium, getAllExpenses,  setUsername} from "./Store/CreateSlice";
+import { activatePremium, getAllExpenses,   setUsername} from "./Store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import Navbar from "./Navbar";
@@ -9,19 +9,16 @@ import { FaPen} from 'react-icons/fa';
 
 export default function WelcomePage() {
   const {allExpenses,username,totalAmount,theme,premium} = useSelector((state) => state.expense)
-    const dispatch = useDispatch()
-    
-
-
+  const dispatch = useDispatch()
     useEffect(() => {
         if (username) {
-            dispatch(getAllExpenses(username))
+          dispatch(getAllExpenses(username))
         } else {
-            const localname = localStorage.getItem("expenseUsername")
+          const localname = localStorage.getItem("expenseUsername")
             dispatch(getAllExpenses(localname))
-            dispatch(setUsername())
+          dispatch(setUsername())
         }
-    }, [])
+    }, [username])
     
    
 
@@ -59,16 +56,12 @@ export default function WelcomePage() {
             ))}
           </tbody>
                 </table>
-                {
-                    (totalAmount >= 1000 && !premium) ?
+                        <button style={{margin:"15px 0px"}}>total:{totalAmount}</button>
                         <div className="premiumText">
                         <div>get Premium to add more than 1000</div>
                             <button onClick={()=>{dispatch(activatePremium("dark"))}}>Activate Premium</button>
                         </div>
-                        :
-                        <button style={{margin:"15px 0px"}}>total:{totalAmount}</button>
                         
-                }
       </div>
                
            

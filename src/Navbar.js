@@ -4,23 +4,17 @@ import { activateCompleteProfile,verifyUserEmail,logoutUser,activateToken,getUse
 import { Link } from "react-router-dom";
 import "./Navbar.css"
 import { useState } from "react";
+import { FaDumpster,FaPen } from "react-icons/fa";
 import EditProfile from "./EditProfile";
+import {BsFillPatchCheckFill} from "react-icons/bs"
+
 export default function Navbar() {
     const[activeSidebar,setActiveSidebar]=useState(false)
     const {profileInfo,token,theme,username,completeProfile,premium} = useSelector((state)=>state.expense)
     const dispatch = useDispatch()
-    
     useEffect(() => {
-        if (token) {
             dispatch(getUserProfile(token))
-        }
-        else {
-            const localtoken = localStorage.getItem('token')
-                dispatch(getUserProfile(localtoken))
-                dispatch(activateToken())
-           
-        }
-    }, [])
+    }, [token])
     
 
     return (
@@ -32,7 +26,11 @@ export default function Navbar() {
                  borderBottom:theme==="light"?"1px solid black":"1px solid white"                
             }}>
             <div className="profileSection">
-                <img src={profileInfo.photoUrl} alt="profilepic" onClick={()=>setActiveSidebar(true)}/>
+                <img
+                    src={profileInfo.photoUrl || process.env.PUBLIC_URL + '/image/pp.png'}
+                    alt="profilepic"
+                    className="profilePic"
+                    onClick={() => setActiveSidebar(true)} />
             </div>
             
              
@@ -41,8 +39,17 @@ export default function Navbar() {
                 style={{background:theme==="dark"?"black":"white"}}
             >
                 <div className="profileSection">
-                 <img src={profileInfo.photoUrl} alt="profilepic" onClick={()=>setActiveSidebar(false)}/>
-                     <div style={{color:theme==="dark"?"white":"black"}}>{profileInfo.name}</div>
+                    <div>
+                        <img
+                            src={profileInfo.photoUrl || process.env.PUBLIC_URL + '/image/pp.png'}
+                            alt="profilepic"
+                            className="profilePic"
+                            onClick={() => setActiveSidebar(false)} />
+                        
+                    </div>
+                    <div style={{ color: theme === "dark" ? "white" : "black" }}>
+                        {profileInfo.name}{profileInfo.emailVerified ?
+                            <BsFillPatchCheckFill /> : ""}</div>
                      <div style={{color:theme==="dark"?"white":"black"}}>{username}@gmail.com</div>
                  </div>
                  <div className="sidebarContentSection">
@@ -56,7 +63,8 @@ export default function Navbar() {
                      </div>
                      
                      <div>
-                              <button className="verificationBtn" onClick={()=>dispatch(verifyUserEmail(token))}>Verify Email</button>
+                        {!profileInfo.emailVerified?
+                            <button className="verificationBtn" onClick={() => dispatch(verifyUserEmail(token))}>Verify Email</button>:""}
                      </div>
                      <div>
                              <Link to="/">

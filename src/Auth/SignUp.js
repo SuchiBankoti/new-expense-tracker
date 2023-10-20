@@ -1,41 +1,45 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { activateToken, authExpenseSignUp, setUsername } from "../Store/CreateSlice";
 
-
 export default function SignUpForm() {
-    // const username = email.match(/^(.+)@/)[1];
-
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
   const [err, setErr] = useState("");
-  const [isFormValid, setIsFormValid] = useState(false);
 
-  function validatePassword() {
-    setFormData((prev) => {
-      return {
-        ...prev,
-        confirmPassword: "",
-      };
-    });
-    setErr("Password do not match. Try again");
+  useEffect(() => {
+    showErr();
+  }, [formData.email, formData.password, formData.confirmPassword]);
+
+  function showErr() {
+    if (formData.email && formData.password && formData.confirmPassword) {
+      if (!formData.email.match(/^.+@.+\..+$/)) {
+        setErr("Use a valid email");
+      } else if (formData.password.length < 8) {
+        setErr("Password should be at least 8 characters");
+      } else if (formData.password !== formData.confirmPassword) {
+        setErr("Passwords do not match");
+      } else {
+        setErr("");
+      }
+    }
   }
 
   function authNewUser() {
-    dispatch(authExpenseSignUp(formData))
-    dispatch(activateToken())
-   
+    dispatch(authExpenseSignUp(formData));
+    dispatch(activateToken());
   }
+
   function sendUsername() {
     const name = formData.email.match(/^(.+)@/)[1];
-    localStorage.setItem("expenseUsername",name)
-    dispatch(setUsername())
-}
+    localStorage.setItem("expenseUsername", name);
+    dispatch(setUsername());
+  }
 
   function handleFormData(e) {
     setFormData((prev) => {
@@ -45,10 +49,6 @@ export default function SignUpForm() {
       };
     });
   }
-
-  useEffect(() => {
-    setIsFormValid(formData.email && formData.password && formData.confirmPassword);
-  }, [formData.email, formData.password, formData.confirmPassword]);
 
   return (
     <div className="authSubPage">
@@ -82,19 +82,20 @@ export default function SignUpForm() {
         </form>
         {err ? <p style={{ color: "red" }}>{err}</p> : ""}
       </div>
-      <Link to="/username-page">
+      <Link to="/welcome-page">
         <button
           className="authPageBtn"
           onClick={() => {
-            sendUsername()
-            if (formData.password === formData.confirmPassword) {
-              setFormData("");
+            sendUsername();
+            if (!err) {
               authNewUser();
-            } else {
-              validatePassword();
             }
           }}
-          disabled={!isFormValid}
+          disabled={
+            formData.password.length < 8 ||
+            formData.password !== formData.confirmPassword ||
+            !formData.email
+          }
         >
           Sign Up
         </button>

@@ -93,15 +93,7 @@ useEffect(() => {
               }
             }
             } style={{ margin: "20px" }}
-          disabled={() =>
-          {
-            if (totalAmount >= 1000 || Number(formdata.cost) > 1000) {
-              return false
-            } else {
-              return true
-            }
-            }
-          }
+          disabled={(totalAmount>1000 || Number(formdata.cost)>1000)}
         >
               Add data
             </button>
@@ -118,15 +110,8 @@ useEffect(() => {
                 }
               }
               } style={{ margin: "20px" }}
-              disabled={() =>
-                {
-                  if (totalAmount >= 1000 || Number(formdata.cost) > 1000) {
-                    return false
-                  } else {
-                    return true
-                  }
-                  }
-                }
+             disabled={(totalAmount>1000 || Number(formdata.cost)>1000)}
+                   
           >
               Update data
             </button>

@@ -11,7 +11,6 @@ export default function EditProfile() {
         photoUrl:profileInfo.photoUrl
     })
     
-    
     useEffect(() => {
         if (username) {
             dispatch(getAllExpenses(username))
