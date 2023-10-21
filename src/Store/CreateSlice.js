@@ -104,6 +104,7 @@ export const verifyUserEmail = createAsyncThunk(
 )
 export const getUserProfile = createAsyncThunk("expense/getProfile", (payload) => {
     if (payload) {
+        console.log('payload',payload)
         return fetch(getProfileApi, {
             method: "POST",
             body: JSON.stringify({
@@ -239,6 +240,19 @@ const expenseSlice = createSlice({
             state.premium = false
             state.theme="light"
             state.allExpenses = []
+            state.totalAmount = null
+            state.token = null
+             state.trackdata=0
+          state.editmode=false
+            state.editableItemId=null
+         state.isUserVerified=false
+          state.profileInfo= {
+        name: "",
+        photoUrl: "",
+        emailVerified: false
+             }
+           state.completeProfile=false
+            state.premium=false
                 
         },
         setUsername: (state, action) => {

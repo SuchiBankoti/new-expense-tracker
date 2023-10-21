@@ -4,7 +4,6 @@ import { activateCompleteProfile,verifyUserEmail,logoutUser,activateToken,getUse
 import { Link } from "react-router-dom";
 import "./Navbar.css"
 import { useState } from "react";
-import { FaDumpster,FaPen } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import {BsFillPatchCheckFill} from "react-icons/bs"
 
