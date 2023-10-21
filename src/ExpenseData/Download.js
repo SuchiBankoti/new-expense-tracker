@@ -13,7 +13,7 @@ function DownloadButton() {
     // Create an anchor element and set its attributes for downloading the file.
     const anchor = document.createElement("a");
     anchor.href = fileDataURI;
-    anchor.download = "example.json";
+    anchor.download = "expenses.json";
 
     // Trigger a click event on the anchor element to initiate the download.
     anchor.click();
