@@ -41,7 +41,7 @@ export default function ResetPassword() {
         </button>
         <div>Alredy a user?</div>
         <div>
-            <Link to="/">
+            <Link to="/new-expense-tracker">
                 <button>
                 Login
                 </button>

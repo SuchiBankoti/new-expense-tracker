@@ -10,10 +10,10 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Main/>} />
-        <Route path="/welcome-page" element={<WelcomePage />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path='/add-expense' element={<AddExpense/>} />
+        <Route path="/new-expense-tracker" element={<Main/>} />
+        <Route path="/new-expense-tracker/welcome-page" element={<WelcomePage />} />
+        <Route path="/new-expense-tracker/reset-password" element={<ResetPassword />} />
+        <Route path='/new-expense-tracker/add-expense' element={<AddExpense/>} />
       </Routes>
     </Router>
   );

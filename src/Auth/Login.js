@@ -50,12 +50,12 @@ export default function LoginForm() {
                     onChange={handleFormData}
                 ></input>
         </form>
-        <Link to="/reset-password">
+        <Link to="/new-expense-tracker/reset-password">
             <p style={{color:"blue"}}>Forgot Password?</p>
         </Link>
         </div>
 
-        <Link to="/welcome-page"><button className="authPageBtn" onClick={() => {
+        <Link to="/new-expense-tracker/welcome-page"><button className="authPageBtn" onClick={() => {
             sendUsername()
                 authLogin()
           }}

@@ -82,7 +82,7 @@ export default function SignUpForm() {
         </form>
         {err ? <p style={{ color: "red" }}>{err}</p> : ""}
       </div>
-      <Link to="/welcome-page">
+      <Link to="/new-expense-tracker/welcome-page">
         <button
           className="authPageBtn"
           onClick={() => {

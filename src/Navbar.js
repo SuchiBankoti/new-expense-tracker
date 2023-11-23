@@ -66,7 +66,7 @@ export default function Navbar() {
                             <button className="verificationBtn" onClick={() => dispatch(verifyUserEmail(token))}>Verify Email</button>:""}
                      </div>
                      <div>
-                             <Link to="/">
+                             <Link to="/new-expense-tracker">
                               <button onClick={()=>dispatch(logoutUser())} className="logoutBtn">Logout</button>
                               </Link>
                      </div>

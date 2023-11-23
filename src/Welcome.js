@@ -32,7 +32,7 @@ export default function WelcomePage() {
             <Navbar/>
             <div className={theme==='dark'?"add-expense-container-active":"add-expense-container"}>
                 <div>Add Expense</div>
-                   <Link to="/add-expense">
+                   <Link to="/new-expense-tracker/add-expense">
                 <FaPlusCircle className="icon" style={{color:theme==="light"?"black":"white"}}/>
                    </Link>
             </div>
