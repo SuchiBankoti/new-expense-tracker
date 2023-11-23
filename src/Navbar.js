@@ -12,6 +12,7 @@ export default function Navbar() {
     const {profileInfo,token,theme,username,completeProfile,premium} = useSelector((state)=>state.expense)
     const dispatch = useDispatch()
     useEffect(() => {
+        console.log('get porfile',token)
             dispatch(getUserProfile(token))
     }, [token])
     

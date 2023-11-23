@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {activateCompleteProfile, getAllExpenses,setUsername, updateUserProfile} from "./Store/CreateSlice";
+import {activateCompleteProfile, getAllExpenses,setUsername, updateUserProfile,getUserProfile} from "./Store/CreateSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { FaArrowLeft } from "react-icons/fa";
 import "./EditProfile.css"
@@ -12,6 +12,7 @@ export default function EditProfile() {
     })
     
     useEffect(() => {
+            dispatch(getUserProfile(token))
         if (username) {
             dispatch(getAllExpenses(username))
         } else {

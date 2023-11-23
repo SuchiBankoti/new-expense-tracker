@@ -46,13 +46,13 @@ export default function WelcomePage() {
             </thead>
             {allExpenses.length > 0 ? <tbody>
               {allExpenses.map((expense) => (
-                <tr key={nanoid()} className={premium?"table-row-active":"table-row"}>
+                <tr key={nanoid()} className={theme==='dark'?"table-row-active":"table-row"}>
                   <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.category}</td>
                   <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.detail}</td>
                   <td className={theme==='dark' ? "table-text-active":"table-text"}>{expense.cost}</td>
                 </tr>
               ))}
-            </tbody>:<tbody><tr><td>No current expenses</td></tr></tbody>}
+            </tbody> : <tbody><tr className={theme==='dark'?"table-row-active":"table-row"}><td className={theme === 'dark' ? "table-text-active" : "table-text"}>No current expenses</td></tr></tbody>}
                    </table>
                     <div className="total-bar">
                              {totalAmount ? <>
@@ -61,7 +61,7 @@ export default function WelcomePage() {
                                                 </> :""}
                        </div>
                      <div className="premiumText">
-                        <div>get Premium to add more than 1000</div>
+                        <div>Get Premium to add more than 1000</div>
                             <button onClick={()=>{dispatch(activatePremium("dark"))}}>Activate Premium</button>
                         </div>
                         
