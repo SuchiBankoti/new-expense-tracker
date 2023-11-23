@@ -36,10 +36,10 @@ export default function EditProfile() {
                 <form>
                     <label className="editProfileLabel" style={{color:theme==="light"?"black":"white"}}>Name
                     </label>
-                    <input name="name" type="text" value={formData.name} onChange={handleChange}/>
+                    <input name="name" type="text" value={formData.name} onChange={handleChange} style={{color:theme==="light"?"black":"white"}}/>
                 <label className="editProfileLabel" style={{color:theme==="light"?"black":"white"}}>Profile Photo url
-                    <input name="photoUrl" type="url" value={formData.photoUrl} onChange={handleChange}/>
                 </label>
+                    <input name="photoUrl" type="url" value={formData.photoUrl} onChange={handleChange} style={{color:theme==="light"?"black":"white"}}/>
             </form>
             <br></br>
                     <button onClick={() => {
