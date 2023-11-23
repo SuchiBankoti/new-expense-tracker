@@ -240,7 +240,7 @@ const expenseSlice = createSlice({
             state.premium = false
             state.theme="light"
             state.allExpenses = []
-            state.totalAmount = null
+            state.totalAmount = 0
             state.token = null
              state.trackdata=0
           state.editmode=false
@@ -279,7 +279,8 @@ const expenseSlice = createSlice({
         },
         [getAllExpenses.fulfilled]: (state, action) => {
             state.isLoading = false
-            if (action.payload) {
+            if (action.payload && !action.payload.error) {
+                console.log('apy',action.payload)
                 const a = Object.entries(action.payload);
                 const allExpenseData = a.map((e) => {
                     return { ...e[1], id: e[0] };

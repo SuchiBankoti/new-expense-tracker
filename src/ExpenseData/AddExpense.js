@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import {getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
 import Navbar from "../Navbar";
-import { FaDumpster,FaPen } from "react-icons/fa";
+import { FaDumpster, FaPen } from "react-icons/fa";
+import "../Welcome.css"
 
 export default function AddExpense() {
-  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme } = useSelector((state) => state.expense)
+  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme,premium } = useSelector((state) => state.expense)
   const dispatch=useDispatch()
   const [formdata, setFormdata] = useState({
     cost: "",
@@ -56,8 +57,11 @@ useEffect(() => {
         color: theme === "light" ? "black" : "white",
         background: theme === "light" ? "white" : "black"
       }}>
-      <Navbar/>
-          <form>
+      <Navbar />
+      <div className="container">
+        <div className="form-container">
+          <div className={theme === 'dark' ? "table-heading-active" : "table-heading"} style={{paddingLeft:"15px"}}>Add Expense</div>
+          <form className="form-expense">
             <label>Cost</label>
             <input
               value={formdata.cost}
@@ -116,28 +120,24 @@ useEffect(() => {
               Update data
             </button>
           )}
-                   
+               </div>         
     
-      <div className="table">
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Details</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
+            <div className={theme==='dark'?"table-active":"table"}>
+        <table border="1" className={theme==='dark' ? "main-table-active":"main-table"}>
+        <thead className={theme==='dark' ?"table-heading-active":"table-heading"}>
+             <p>Expense List</p>
+            </thead>
           <tbody>
             {allExpenses.map((expense) => (
-              <tr key={nanoid()} style={{ display: editmode && editableItemId === expense.id ? "none" : "tableRow" }}>
-                <td>{expense.category}</td>
-                <td>{expense.detail}</td>
-                <td>{expense.cost}</td>
-                <td>
+              <tr key={nanoid()} style={{ display: editmode && editableItemId === expense.id ? "none" : "tableRow" }} className={premium?"table-row-active":"table-row"}>
+                <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.category}</td>
+                <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.detail}</td>
+                <td className={theme==='dark' ? "table-text-active":"table-text"}>{expense.cost}</td>
+                <td className={theme==='dark'? "table-text-active":"table-text"}>
                   <FaDumpster onClick={() => dispatch(removeExpenseData({ id: expense.id,username:username}))} className="icon"/>
                 </td>
                 {!editmode && (
-                  <td>
+                  <td className={theme==='dark'? "table-text-active":"table-text"}>
                     <FaPen onClick={() => activeEdit(expense.id)} className="icon"/>
                   </td>
                 )}
@@ -145,9 +145,15 @@ useEffect(() => {
             ))}
           </tbody>
         </table>
-        <div>total:{totalAmount}</div>
-         
+        <div className="total-bar">
+                             {totalAmount ? <>
+                                     <div>Total</div>
+                                      <div>{totalAmount}</div>
+                                                </> :""}
+                       </div>
+               </div>
       </div>
+        
     </div>
   );
 }

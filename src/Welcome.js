@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { nanoid } from "@reduxjs/toolkit";
 import Navbar from "./Navbar";
 import DownloadButton from "./ExpenseData/Download";
-import { FaPen} from 'react-icons/fa';
+import { FaPlusCircle } from 'react-icons/fa';
+import "./Welcome.css"
 
 export default function WelcomePage() {
   const {allExpenses,username,totalAmount,theme,premium} = useSelector((state) => state.expense)
@@ -19,7 +20,7 @@ export default function WelcomePage() {
           dispatch(setUsername())
         }
     }, [username])
-    
+    console.log(allExpenses)
    
 
 
@@ -28,41 +29,43 @@ export default function WelcomePage() {
             color: theme === "light" ? "black" : "white",
             background: theme === "light" ? "white" : "black"
         }}>
-            
             <Navbar/>
-            <div style={{display:"flex",alignItems:"center",padding:"10px 15px",gap:"10px"}}>
-                <Link to="/add-expense">
-                <FaPen className="icon" style={{color:theme==="light"?"black":"white"}}/>
-                </Link>
-                <h2>Day to day expenses</h2>
-                <DownloadButton/>
+            <div className={theme==='dark'?"add-expense-container-active":"add-expense-container"}>
+                <div>Add Expense</div>
+                   <Link to="/add-expense">
+                <FaPlusCircle className="icon" style={{color:theme==="light"?"black":"white"}}/>
+                   </Link>
             </div>
-            <div className="table">
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Details</th>
-              <th>Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allExpenses.map((expense) => (
-              <tr key={nanoid()}>
-                <td>{expense.category}</td>
-                <td>{expense.detail}</td>
-                <td>{expense.cost}</td>
-              </tr>
-            ))}
-          </tbody>
-                </table>
-                        <button style={{margin:"15px 0px"}}>total:{totalAmount}</button>
-                        <div className="premiumText">
+            <div className={theme==='dark'?"table-active":"table"}>
+          <table border="1" className={theme==='dark'? "main-table-active":"main-table"}>
+            <thead className={theme==='dark'?"table-heading-active":"table-heading"}>
+             <p>Expense List</p> 
+              <div className="download-btn">
+                <DownloadButton/>
+          </div>
+            </thead>
+            {allExpenses.length > 0 ? <tbody>
+              {allExpenses.map((expense) => (
+                <tr key={nanoid()} className={premium?"table-row-active":"table-row"}>
+                  <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.category}</td>
+                  <td className={theme==='dark'? "table-text-active":"table-text"}>{expense.detail}</td>
+                  <td className={theme==='dark' ? "table-text-active":"table-text"}>{expense.cost}</td>
+                </tr>
+              ))}
+            </tbody>:<tbody><tr><td>No current expenses</td></tr></tbody>}
+                   </table>
+                    <div className="total-bar">
+                             {totalAmount ? <>
+                                     <div>Total</div>
+                                      <div>{totalAmount}</div>
+                                                </> :""}
+                       </div>
+                     <div className="premiumText">
                         <div>get Premium to add more than 1000</div>
                             <button onClick={()=>{dispatch(activatePremium("dark"))}}>Activate Premium</button>
                         </div>
                         
-      </div>
+               </div>
                
            
         </div>
