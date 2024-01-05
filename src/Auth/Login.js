@@ -1,25 +1,22 @@
-import React, { useState,useEffect } from "react";
+import React, { useState} from "react";
 import { Link } from "react-router-dom";
-import { activateToken, authExpenseLogin, getUserProfile, setUsername } from "../Store/CreateSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { activateToken, authExpenseLogin, setUsername } from "../Store/CreateSlice";
+import { useDispatch} from "react-redux";
 
-const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 
 
 export default function LoginForm() {
-    const{token}=useSelector((state)=>state.expense)
   const dispatch = useDispatch()
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
-    const [isFormValid, setIsFormValid] = useState(false);
 
     function handleFormData(e) {
        setFormData(prev=>({...prev,[e.target.name]:e.target.value}))
    }
     function authLogin() {
-    dispatch(authExpenseLogin(formData))
+        dispatch(authExpenseLogin(formData))
         dispatch(activateToken())
   }
     function sendUsername() {
@@ -27,43 +24,43 @@ export default function LoginForm() {
         localStorage.setItem("expenseUsername",name)
              dispatch(setUsername())
 }
-    useEffect(() => {
-        setIsFormValid(formData.email && formData.password);
-      }, [formData.email, formData.password]);
+   
   
     
-    return (<div className="authSubPage">
-        <div>
-            <h2 className="authPageTitle">Login</h2>
-            <form>
+    return (<>
+            <h2 className="title">Login</h2>
+            <form className="auth-form">
                 <input
+                     className="auth-input"
                     type="email"
                     placeholder="Email"
                     name="email"
                     value={formData.email}
                     onChange={handleFormData}
+                    required
                 ></input>
-                <input type="password"
+                <input
+                     className="auth-input"
+                    type="password"
                     placeholder="Password"
                     name="password"
                     value={formData.password}
                     onChange={handleFormData}
+                    required
                 ></input>
         </form>
-        <Link to="/new-expense-tracker/reset-password">
+        <Link to="/reset-password">
             <p style={{color:"blue"}}>Forgot Password?</p>
         </Link>
-        </div>
 
-        <Link to="/new-expense-tracker/welcome-page"><button className="authPageBtn" onClick={() => {
+        <Link to="/welcome-page"><button className="auth-page-btn login" onClick={() => {
             sendUsername()
                 authLogin()
           }}
-          disabled={!isFormValid}
           >Login</button>
             </Link>
        
        
         
-    </div>)
+    </>)
 }

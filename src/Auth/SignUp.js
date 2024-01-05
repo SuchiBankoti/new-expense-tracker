@@ -51,11 +51,11 @@ export default function SignUpForm() {
   }
 
   return (
-    <div className="authSubPage">
-      <div>
-        <h2 className="authPageTitle">SignUp</h2>
-        <form>
+    <>
+        <h2 className="title">SignUp</h2>
+        <form className="auth-form">
           <input
+            className="auth-input"
             type="email"
             placeholder="Email"
             name="email"
@@ -64,6 +64,7 @@ export default function SignUpForm() {
             required
           />
           <input
+             className="auth-input"
             type="password"
             placeholder="Password"
             name="password"
@@ -72,6 +73,7 @@ export default function SignUpForm() {
             required
           />
           <input
+             className="auth-input"
             type="password"
             placeholder="Confirm Password"
             name="confirmPassword"
@@ -81,25 +83,20 @@ export default function SignUpForm() {
           />
         </form>
         {err ? <p style={{ color: "red" }}>{err}</p> : ""}
-      </div>
-      <Link to="/new-expense-tracker/welcome-page">
+      <Link to="/welcome-page">
         <button
-          className="authPageBtn"
+          className="auth-page-btn signup"
           onClick={() => {
             sendUsername();
             if (!err) {
               authNewUser();
             }
           }}
-          disabled={
-            formData.password.length < 8 ||
-            formData.password !== formData.confirmPassword ||
-            !formData.email
-          }
+          
         >
           Sign Up
         </button>
       </Link>
-    </div>
+    </>
   );
 }

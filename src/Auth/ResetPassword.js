@@ -28,24 +28,31 @@ export default function ResetPassword() {
             }
           });
     }
-    return (<div className="resetPasswordPage">
-        <form>
+    return (
+        <div className="Main">
+
+        <div className="auth-page">
+        <form className="auth-form">
             <input
                 type="email"
                 value={userMail}
-                onChange={(e)=>handleChange(e)}
+                onChange={(e) => handleChange(e)}
+                className="auth-input"
+                style={{border:"1px solid grey"}}
             />
         </form>
-        <button onClick={sendLink}>
+        <button onClick={sendLink} className="auth-page-btn">
         Send Link
         </button>
-        <div>Alredy a user?</div>
+        <div>Already a user?</div>
         <div>
-            <Link to="/new-expense-tracker">
-                <button>
+            <Link to="/">
+                <button className="auth-page-btn">
                 Login
                 </button>
             </Link>
         </div>
-    </div>)
+            </div>
+        </div>
+            )
 }

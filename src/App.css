@@ -1,103 +1,16 @@
-.AuthPage{
- border: 1px solid black;
- width: (100vw - 20px);
- height: 100vh;
- border-radius: 15px;
- background-color: aliceblue;
- padding: 10px;
- display: flex;
- flex-direction: column;
- gap:15px;
- margin: auto;
-}
-
-.AuthPage>div{
-  display: flex;
-  flex-direction: column;
-  gap:15px;
-  width: 100%;
-  
-}
-form{
-  display: flex;
-  flex-direction: column;
-  gap:10px;
-}
-input{
-  height: 35px;
-  border: 1px solid gray;
-  border-radius: 8px;
-  text-align:start;
-  width: 90%;
-  background: transparent;
-}
-.authPageBtn{
-  border-radius: 20px;
-  height: 30px;
-  width: 100%;
-  text-align: center;
-}
-.authPageMainBtn{
-  width: 100%;
-  border-radius: 10px;
-  text-align: center;
-  padding: 10px;
-  background-color: aquamarine;
-}
-.verificationBtn{
-  height: 35px;
-  width: 200px;
-  background-color: rgb(125, 125, 248);
-  color: white;
-  border: 2px solid white;
-  margin: 0px 20px;
-  border-radius: 18px;
-}
-.resetPasswordPage{
-  display: flex;
-    flex-direction: column;
-    width: 600px;
-    margin: auto;
-    border: 1px solid black;
-    height: 500px;
-    gap: 20px;
-    padding: 20px;
-}
-button{
-  width: 200px;
-  background-color: skyblue;
-  color: white;
-  height: 31px;
-  border-radius: 18px;
-}
-.addExpensePage{
-  background-color: transparent;
+.Main{
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  gap:50px;
-  
+  justify-content: center;
+  align-items: center;
+  background-color: var( --secondary-colorone);
 }
-.welcomePage{
-  background-color: transparent;
+.auth-sidebar{
+    width: 30%;
+    height: 100%;
+}
+.auth-sidebar>img{
   width: 100%;
   height: 100%;
-  position: relative;
-}
-.icon{
-  font-size: 15px;
-  cursor: pointer;
-}
-
-thead{
-  text-align:left;
-}
-.premiumText{
-  margin-top: 20px;
-  color: skyblue;
-}
-select{
-  background: transparent;
-
 }

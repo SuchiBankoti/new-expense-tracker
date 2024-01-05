@@ -1,8 +1,8 @@
-import AuthPage from './Auth/AuthPage';
+import AuthPage from '../Auth/AuthPage';
 
 function Main() {
   return (
-    <div className="App">
+    <div className="Main">
        <AuthPage/>      
     </div>
   );
