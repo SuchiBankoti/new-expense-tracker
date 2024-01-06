@@ -1,12 +1,12 @@
 import { FaDumpster, FaPen } from "react-icons/fa";
 import React, { useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import {getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
+import { activateEdit ,removeExpenseData,} from "../Store/CreateSlice";
 
 
 
 export default function MiniExpense({ expense,setFormdata }) {
-    const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme,premium } = useSelector((state) => state.expense)
+    const { allExpenses,editmode,editableItemId,username } = useSelector((state) => state.expense)
     const [activeSecondary,setActiveSecondary]=useState(false)
   const dispatch=useDispatch()
     
@@ -25,7 +25,8 @@ export default function MiniExpense({ expense,setFormdata }) {
             <div className={`primary-mini-expense ${activeSecondary?"active":""}`} >
                 <div className="mini-expense-icon">
                     <img
-               src={`${process.env.PUBLIC_URL}/image/${expense.category}.png`}
+              src={`${process.env.PUBLIC_URL}/image/${expense.category}.png`}
+              alt="icon"
                  className="mini-expense-icon" /></div>
             <p className="mini-expense-icon">{expense.category}</p>
               </div>

@@ -3,7 +3,6 @@ import { createSlice , createAsyncThunk} from "@reduxjs/toolkit";
 const api = "https://expense-tracker-25d4f-default-rtdb.asia-southeast1.firebasedatabase.app/";
 const loginApi ="https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBVCqLAhTyXyQ5ZA_q0AqV-dtjxAbu5-Zc"
 const signupApi = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBVCqLAhTyXyQ5ZA_q0AqV-dtjxAbu5-Zc";
-const getVerified="https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBVCqLAhTyXyQ5ZA_q0AqV-dtjxAbu5-Zc"
 const getProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyBVCqLAhTyXyQ5ZA_q0AqV-dtjxAbu5-Zc"
 const updateProfileApi = "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyBVCqLAhTyXyQ5ZA_q0AqV-dtjxAbu5-Zc";
 

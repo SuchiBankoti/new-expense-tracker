@@ -5,7 +5,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import "../CSS/EditProfile.css"
 
 export default function EditProfile() {
-  const {token,username,profileInfo,theme} = useSelector((state) => state.expense)
+  const {token,username,profileInfo} = useSelector((state) => state.expense)
        const dispatch=useDispatch()
     const [formData, setFormData] = useState({
         name: profileInfo.name,

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useSelector,useDispatch } from "react-redux";
-import {getAllExpenses, activateEdit ,addExpenseData,removeExpenseData,updateExpenseData,getTotalAmount, setUsername} from "../Store/CreateSlice";
+import {getAllExpenses,addExpenseData,updateExpenseData, setUsername} from "../Store/CreateSlice";
 import Navbar from "../Comps/Navbar";
 import "../CSS/AddExpense.css"
 import MiniExpense from "./MiniExpense";
 
 export default function AddExpense() {
-  const { allExpenses,trackdata,editmode,editableItemId,username,totalAmount,theme,premium } = useSelector((state) => state.expense)
+  const { allExpenses,trackdata,editmode,editableItemId,username} = useSelector((state) => state.expense)
   const dispatch=useDispatch()
   const [formdata, setFormdata] = useState({
     cost: "",
