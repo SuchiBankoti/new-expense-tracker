@@ -1,23 +1,30 @@
 import React, { useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { activateToken, authExpenseLogin, setUsername } from "../Store/CreateSlice";
-import { useDispatch} from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 
 
 
 export default function LoginForm() {
-  const dispatch = useDispatch()
+    const dispatch = useDispatch()
+    const { token } = useSelector(state => state.expense)
+    const naviagte=useNavigate()
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
-
+  const[err,setErr]=useState('')
     function handleFormData(e) {
        setFormData(prev=>({...prev,[e.target.name]:e.target.value}))
    }
     function authLogin() {
         dispatch(authExpenseLogin(formData))
         dispatch(activateToken())
+        if (token) {
+            naviagte('/welcome-page')
+        } else {
+            setErr('Invalid credentials')
+        }
   }
     function sendUsername() {
         const name = formData.email.match(/^(.+)@/)[1];
@@ -49,16 +56,16 @@ export default function LoginForm() {
                     required
                 ></input>
         </form>
+        <div style={{ visibility: err ? 'visible' : "hidden", color: "red" }}>{err}</div>
         <Link to="/reset-password">
             <p style={{color:"blue"}}>Forgot Password?</p>
         </Link>
-
-        <Link to="/welcome-page"><button className="auth-page-btn login" onClick={() => {
+          
+        <button className="auth-page-btn login" onClick={() => {
             sendUsername()
                 authLogin()
           }}
           >Login</button>
-            </Link>
        
        
         

@@ -80,34 +80,9 @@ export const authExpenseSignUp = createAsyncThunk(
         }
     }
 )
-export const verifyUserEmail = createAsyncThunk(
-    "expense/verifyEmail", (payload) => {
-        
-            return fetch(getVerified, {
-                method: "POST",
-                body: JSON.stringify({
-                    requestType:"VERIFY_EMAIL",
-                    idToken:payload
-                }),
-                headers: {
-                    "Content-Type": "application/json",
-                }
-            }).then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    return Promise.reject("Request failed with status: " + res.status);
-                }
-            }).catch(e => {
-                console.log(e)
-                return Promise.reject(e);
-            });
-        }
-    
-)
+
 export const getUserProfile = createAsyncThunk("expense/getProfile", (payload) => {
     if (payload) {
-        console.log('payload',payload)
         return fetch(getProfileApi, {
             method: "POST",
             body: JSON.stringify({
@@ -272,9 +247,6 @@ const expenseSlice = createSlice({
             state.premium=true
             state.theme=action.payload
         },
-        switchTheme: (state, action) => {
-            state.theme=action.payload
-        }
     },
     extraReducers: {
         [getAllExpenses.pending]: (state) => {
@@ -283,7 +255,6 @@ const expenseSlice = createSlice({
         [getAllExpenses.fulfilled]: (state, action) => {
             state.isLoading = false
             if (action.payload && !action.payload.error) {
-                console.log('apy',action.payload)
                 const a = Object.entries(action.payload);
                 const allExpenseData = a.map((e) => {
                     return { ...e[1], id: e[0] };
@@ -337,7 +308,6 @@ const expenseSlice = createSlice({
         [authExpenseLogin.fulfilled]: (state, action) => {
             state.isLoading = false
             localStorage.setItem("token", action.payload.idToken);
-            state.token=localStorage.getItem("token")
         },
         [authExpenseLogin.rejected]: (state) => {
             state.isLoading=false
@@ -347,25 +317,13 @@ const expenseSlice = createSlice({
         },
         [authExpenseSignUp.fulfilled]: (state, action) => {
             state.isLoading = false
-            console.log('signiupafterpylod',action.payload)
             localStorage.setItem("token", action.payload.idToken);
             state.token=localStorage.getItem("token")
         },
         [authExpenseSignUp.rejected]: (state) => {
             state.isLoading=false
         },
-        [verifyUserEmail.pending]: (state) => {
-            state.isLoading=true
-        },
-        [verifyUserEmail.fulfilled]: (state, action) => {
-            state.isLoading = false
-            alert("email verification mail sent")
-            state.isUserVerified=true
-        },
-        [verifyUserEmail.rejected]: (state) => {
-            state.isLoading = false
-            alert("email verification failed")
-        },
+       
         [getUserProfile.pending]: (state) => {
             state.isLoading=true
         },
