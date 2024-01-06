@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useEffect, useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { activateToken, authExpenseLogin, setUsername } from "../Store/CreateSlice";
 import { useDispatch, useSelector} from "react-redux";
@@ -7,31 +7,35 @@ import { useDispatch, useSelector} from "react-redux";
 
 export default function LoginForm() {
     const dispatch = useDispatch()
-    const { token } = useSelector(state => state.expense)
     const naviagte=useNavigate()
     const [formData, setFormData] = useState({
         email: "",
         password: "",
     })
-  const[err,setErr]=useState('')
+    const [err, setErr] = useState('')
+    const[isLoging,setIsLogingIn]=useState(false)
     function handleFormData(e) {
        setFormData(prev=>({...prev,[e.target.name]:e.target.value}))
    }
     function authLogin() {
+        console.log('logginin')
         dispatch(authExpenseLogin(formData))
         dispatch(activateToken())
-        if (token) {
-            naviagte('/welcome-page')
-        } else {
-            setErr('Invalid credentials')
-        }
+        setIsLogingIn(true)
+        setTimeout(() => {
+            if (localStorage.getItem('token')) {
+                naviagte('/welcome-page')
+            } else {
+                setErr('Invalid credentials')
+                setIsLogingIn(false)
+            }
+        }, 2000);
   }
     function sendUsername() {
         const name = formData.email.match(/^(.+)@/)[1];
         localStorage.setItem("expenseUsername",name)
              dispatch(setUsername())
 }
-   
   
     
     return (<>
@@ -56,7 +60,8 @@ export default function LoginForm() {
                     required
                 ></input>
         </form>
-        <div style={{ visibility: err ? 'visible' : "hidden", color: "red" }}>{err}</div>
+        <div style={{ visibility: isLoging ? 'visible' : "hidden", color: "black" }}>Loging In...</div>
+        <div style={{ visibility: err && !isLoging ? 'visible' : "hidden", color: "red" }}>{err}</div>
         <Link to="/reset-password">
             <p style={{color:"blue"}}>Forgot Password?</p>
         </Link>

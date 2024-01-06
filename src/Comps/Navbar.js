@@ -1,18 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { activateCompleteProfile,verifyUserEmail,logoutUser,getUserProfile } from "../Store/CreateSlice";
+import { activateCompleteProfile,logoutUser,getUserProfile } from "../Store/CreateSlice";
 import { Link } from "react-router-dom";
 import "../CSS/Navbar.css"
 import { useState } from "react";
 import EditProfile from "./EditProfile";
-import {BsFillPatchCheckFill} from "react-icons/bs"
 
 export default function Navbar() {
     const[activeSidebar,setActiveSidebar]=useState(false)
-    const {profileInfo,token,theme,username,completeProfile} = useSelector((state)=>state.expense)
+    const {profileInfo,token,username,completeProfile} = useSelector((state)=>state.expense)
     const dispatch = useDispatch()
     useEffect(() => {
-        console.log('get porfile',token)
             dispatch(getUserProfile(token))
     }, [token])
     
