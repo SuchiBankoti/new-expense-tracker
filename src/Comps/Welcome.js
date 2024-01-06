@@ -28,7 +28,7 @@ export default function WelcomePage() {
             </div>
             {allExpenses.length > 0 ?
               <div className="expenses">
-                {allExpenses.map((expense,i)=> <Expense expense={expense} key={i} />)}
+                {allExpenses.map(expense=> <Expense expense={expense} key={expense.id} />)}
               </div>
               : <p className="table-text">No current expenses</p>}
           </div>

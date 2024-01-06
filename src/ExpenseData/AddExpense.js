@@ -59,7 +59,8 @@ useEffect(() => {
               value={formdata.cost}
               type="number"
               name="cost"
-              onChange={handleChange}
+            onChange={handleChange}
+            required
             />
             <label className="label">Detail</label>
             <input
@@ -67,10 +68,11 @@ useEffect(() => {
               value={formdata.detail}
               type="text"
               name="detail"
-              onChange={handleChange}
+            onChange={handleChange}
+            required
             />
             <label className="label">Category</label>
-            <select value={formdata.category} name="category" onChange={handleChange}   className="auth-input">
+            <select value={formdata.category} name="category" onChange={handleChange}   className="auth-input" required>
             <option value="">Select</option>
               <option value="Food">Food</option>
               <option value="Transport">Transport</option>
@@ -82,7 +84,11 @@ useEffect(() => {
             </select>
           </form>
           {!editmode ? (
-          <button onClick={() => dispatch(addExpenseData({ formdata: formdata, username: username }))} className="auth-page-btn">
+          <button onClick={() => {
+            if (formdata.cost && formdata.category && formdata.detail) {
+              dispatch(addExpenseData({ formdata: formdata, username: username }))
+            }
+          }} className="auth-page-btn">
               Add data
             </button>
           ) : (
@@ -98,7 +104,7 @@ useEffect(() => {
            
       </div>
       <div className="all-expense">
-        {allExpenses.map((expense) => <MiniExpense expense={expense} setFormdata={setFormdata} />)}
+        {allExpenses.map((expense) => <MiniExpense expense={expense} setFormdata={setFormdata} key={expense.id}/>)}
         </div>
        </div>
   );
