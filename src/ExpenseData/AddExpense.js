@@ -17,7 +17,6 @@ export default function AddExpense() {
   useEffect(() => {
     dispatch(setUsername())
   }, [])
-  
 
   useEffect(() => {
     dispatch(getAllExpenses(username))

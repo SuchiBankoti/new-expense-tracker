@@ -8,8 +8,7 @@ import { activateEdit ,removeExpenseData,} from "../Store/CreateSlice";
 export default function MiniExpense({ expense,setFormdata }) {
     const { allExpenses,editmode,editableItemId,username } = useSelector((state) => state.expense)
     const [activeSecondary,setActiveSecondary]=useState(false)
-  const dispatch=useDispatch()
-    
+  const dispatch = useDispatch()
     function activeEdit(id) {
         dispatch(activateEdit(id))
         const editableItem = allExpenses.find((e) => e.id === id);

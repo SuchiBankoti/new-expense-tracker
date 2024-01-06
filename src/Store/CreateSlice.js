@@ -162,7 +162,7 @@ export const removeExpenseData = createAsyncThunk(
         return fetch(`${api}/data/${payload.username}/allExpenses/${payload.id}.json`, {
             method: "DELETE"
           }).then((res) => {
-            if (res.ok) {
+              if (res.ok) {
                 return res.json();
             }else {
                 return Promise.reject("Request failed with status: " + res.status);
@@ -219,7 +219,7 @@ const expenseSlice = createSlice({
             state.allExpenses = []
             state.totalAmount = 0
             state.token = null
-             state.trackdata=0
+             state.trackdata=false
           state.editmode=false
             state.editableItemId=null
          state.isUserVerified=false
@@ -264,6 +264,9 @@ const expenseSlice = createSlice({
                 },0)
                 state.allExpenses = allExpenseData
                 state.totalAmount = total
+            } else {
+                state.allExpenses = []
+                state.totalAmount = 0
             }
         },
         [getAllExpenses.rejected]: (state) => {
@@ -274,7 +277,7 @@ const expenseSlice = createSlice({
         },
         [addExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
-            state.trackdata=state.trackdata+1
+            state.trackdata=!state.trackdata
         },
         [addExpenseData.rejected]: (state) => {
             state.isLoading=false
@@ -284,7 +287,7 @@ const expenseSlice = createSlice({
         },
         [removeExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
-            state.trackdata=state.trackdata-1
+            state.trackdata = !state.trackdata
         },
         [removeExpenseData.rejected]: (state) => {
             state.isLoading=false
@@ -295,7 +298,7 @@ const expenseSlice = createSlice({
         [updateExpenseData.fulfilled]: (state, action) => {
             state.isLoading = false
             state.editmode =false
-            state.trackdata=state.trackdata+1
+            state.trackdata=!state.trackdata
             state.editableItemId=null
         },
         [updateExpenseData.rejected]: (state) => {
